@@ -1,0 +1,53 @@
+# General Query on film table
+# Only include film records where id is 2 digit or less
+
+SELECT *
+FROM films
+WHERE CAST(id AS VARCHAR) NOT LIKE '%_ _ _%';
+
+# Only include film records where id is 3 digit or less
+
+SELECT *
+FROM films
+WHERE CAST(id AS VARCHAR) NOT LIKE '%_ _ _ _%';
+
+# Only include film records where id is 3 digit or more
+
+SELECT *
+FROM films
+WHERE CAST(id AS VARCHAR) LIKE '%_ _ _%';
+
+# Only include film records where id is 4 digit or more
+
+SELECT *
+FROM films
+WHERE CAST(id AS VARCHAR) LIKE '%_ _ _ _%';
+
+# Only include film records where id is 2 digit
+
+SELECT *
+FROM films
+WHERE CAST(id AS VARCHAR)  LIKE '_ _';
+
+# Only include film records where id is 3 digit
+
+SELECT *
+FROM films
+WHERE CAST(id AS VARCHAR)  LIKE '_ _ _';
+
+#Include film record where title contains Hills in any position (case sensitive)
+
+SELECT *
+FROM films
+WHERE title LIKE '%Hill%';
+
+Include film record where title starts with The and ends with Parade (case sensitive)
+
+SELECT *
+FROM films
+WHERE title LIKE 'The%Parade';
+
+Include film record where first word of title has z in second position (case sensitive)
+SELEC
+FROM films
+WHERE title LIKE '_z%';

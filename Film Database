@@ -1,0 +1,103 @@
+Find the titles of all films directed by person with name starting with Richard.
+
+SELECT f.title,r.role,p.name
+FROM films AS f
+INNER JOIN roles AS r
+ON f.id = r.film_id
+INNER JOIN people AS p
+ON r.person_id = p.id
+WHERE r.role = 'director'
+AND p.name LIKE 'Richard%';
+
+--Find all years that have a film that received a imdb_score greater than 5,
+--and sort them in increasing order
+
+ SELECT DISTINCT f.release_year
+ FROM films AS f
+ INNER JOIN reviews AS re
+ ON f.id = re.film_id
+ WHERE re.imdb_score >5
+ ORDER BY release_year;
+
+ SELECT DISTINCT f.release_year
+ FROM films AS f
+ INNER JOIN reviews AS re
+ ON f.id = re.film_id
+ WHERE re.imdb_score >5
+ AND f.release_year IS NOT NULL
+ ORDER BY f.release_year;
+
+ --Find the titles of all movies that have no facebook likes.
+
+ SELECT f.title, re.facebook_likes
+ FROM films AS f
+ INNER JOIN reviews AS re
+ ON f.id = re.film_id
+ WHERE re.facebook_likes = 0;
+
+ --Find name of all people who acted in more than one movie
+ To see
+
+ --Count actors per film , and arrange them in decreasing order
+
+  SELECT COUNT(p.name), f.id
+  FROM people AS p
+  INNER JOIN roles AS r
+  ON p.id = r.person_id
+  INNER JOIN films AS f
+  ON f.id = r.film_id
+  WHERE r.role = 'actor'
+  GROUP BY f.id
+  ORDER BY COUNT DESC;
+
+   Find the difference between the average rating of movies released before 1980
+   and the average rating of movies released after 1980.
+
+ SELECT AVG(be1960.avg)-AVG(af1960.avg)
+FROM (SELECT AVG(imdb_score) AS avg
+FROM reviews AS re
+INNER JOIN films AS f
+ON re.film_id = f.id
+WHERE release_year < 1960
+GROUP BY f.id) AS be1960,(SELECT AVG(imdb_score) AS avg
+FROM reviews AS re
+INNER JOIN films AS f
+ON re.film_id = f.id
+WHERE release_year > 1960
+GROUP BY f.id) AS af1960;
+
+--List movie titles and scoring, from highest-rated to lowest-rated. If two or
+more movies have the same  rating, list them in alphabetical order.
+
+SELECT f.title,re.imdb_score
+FROM films AS f
+INNER JOIN reviews AS re
+ON f.id = re.film_id
+ORDER BY re.imdb_score DESC,f.title;
+
+Some directors directed more than one movie. For all such directors, return the
+titles of all movies directed by them, along with the director name. Sort by
+director name, then movie title.
+
+SELECT f.title,p.name
+FROM films AS f
+INNER JOIN roles AS r
+ON f.id = r.film_id
+INNER JOIN people AS p
+ON p.id = r.person_id
+WHERE r.role = 'director'
+AND (SELECT COUNT(*) FROM roles AS r1 WHERE r.person_id = r1.person_id) > 1
+ORDER BY p.name,f.title;
+
+--Find the movie(s) with the highest rating. Return the movie title(s) and rating.
+
+SELECT f.title,re.imdb_score
+FROM films AS f
+INNER JOIN reviews AS re
+ON f.id = re.film_id
+WHERE re.imdb_score = (SELECT MAX(re.imdb_score)
+FROM reviews AS re);
+
+--For each director, return the director's name together with the title(s) of
+the movie(s) they directed that received the highest imdb_score among all of their
+movies, and the value of that imdb_score.
